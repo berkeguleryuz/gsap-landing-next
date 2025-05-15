@@ -5,9 +5,11 @@ import React, { useEffect, useRef } from "react";
 const AnimatedTitle = ({
   title,
   containerClass,
+  sectionId,
 }: {
   title: string;
   containerClass: string;
+  sectionId?: string;
 }) => {
   const containerRef = useRef(null);
 
@@ -34,7 +36,10 @@ const AnimatedTitle = ({
   }, []);
 
   return (
-    <div ref={containerRef} className={`animated-title ${containerClass}`}>
+    <div
+      id={sectionId}
+      ref={containerRef}
+      className={`animated-title ${containerClass}`}>
       {title.split("<br />").map((line: string, index: number) => (
         <div
           key={index}
