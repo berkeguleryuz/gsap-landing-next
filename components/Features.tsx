@@ -1,12 +1,54 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useState } from "react";
 import { TiLocationArrow } from "react-icons/ti";
 interface BentoCardProps {
   src: string;
   title: React.ReactNode;
   description?: string;
 }
+
+interface BentoTiltProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const BentoTilt = ({ children, className = "" }: BentoTiltProps) => {
+  const [transformStyle, setTransformStyle] = useState("");
+
+  const itemRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!itemRef.current) return;
+
+    const { left, top, width, height } =
+      itemRef.current.getBoundingClientRect();
+
+    const relativeX = (e.clientX - left) / width;
+    const relativeY = (e.clientY - top) / height;
+
+    const tiltX = (relativeY - 0.5) * 5;
+    const tiltY = (relativeX - 0.5) * 5;
+
+    const newTransform = `perspective(700px) rotateX(${tiltX}deg) rotateY(${tiltY}deg) scale3d(0.98, 0.98, 0.98)`;
+
+    setTransformStyle(newTransform);
+  };
+
+  const handleMouseLeave = () => {
+    setTransformStyle("");
+  };
+  return (
+    <div
+      ref={itemRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className={className}
+      style={{ transform: transformStyle }}>
+      {children}
+    </div>
+  );
+};
 
 const BentoCard = ({ src, title, description }: BentoCardProps) => {
   return (
@@ -50,7 +92,7 @@ const Features = () => {
           </p>
         </div>
 
-        <div className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
+        <BentoTilt className="border-hsla relative mb-7 h-96 w-full overflow-hidden rounded-md md:h-[65vh]">
           <BentoCard
             src="/videos/feature-1.mp4"
             title={
@@ -60,11 +102,11 @@ const Features = () => {
             }
             description="A cross-platform metagame app, turning your activities across Web2 and Web3 games into a rewarding adventure."
           />
-        </div>
+        </BentoTilt>
 
-        <div className="grid h-[100vh] w-full grid-cols-2 gap-7">
+        <div className="grid h-[124vh] w-full grid-cols-2 gap-7">
           <div className="flex h-full flex-col gap-7">
-            <div className="bento-tilt_1 flex-1">
+            <BentoTilt className="bento-tilt_1 flex-1">
               <BentoCard
                 src="/videos/feature-2.mp4"
                 title={
@@ -76,7 +118,7 @@ const Features = () => {
                   "An anime and gaming-inspired NFT collection - the IP primed for expansion"
                 }
               />
-            </div>
+            </BentoTilt>
             <div className="bento-tilt_2 h-1/3">
               <div className="flex size-full flex-col justify-between bg-violet-300 p-5">
                 <h1 className="bento-title special-font max-w-64 text-black">
@@ -88,7 +130,7 @@ const Features = () => {
           </div>
 
           <div className="flex h-full flex-col gap-7">
-            <div className="bento-tilt_1 flex-1">
+            <BentoTilt className="bento-tilt_1 flex-1">
               <BentoCard
                 src="/videos/feature-3.mp4"
                 title={
@@ -100,8 +142,9 @@ const Features = () => {
                   "A gamified social hub, adding a new dimension of play to social interaction for Web3 communities."
                 }
               />
-            </div>
-            <div className="bento-tilt_1 flex-1">
+            </BentoTilt>
+
+            <BentoTilt className="bento-tilt_1 flex-1">
               <BentoCard
                 src="/videos/feature-4.mp4"
                 title={
@@ -113,8 +156,8 @@ const Features = () => {
                   "A gamified social hub, adding a new dimension of play to social interaction for Web3 communities."
                 }
               />
-            </div>
-            <div className="bento-tilt_2 h-1/3">
+            </BentoTilt>
+            <BentoTilt className="bento-tilt_2 h-1/3">
               <video
                 src={"videos/feature-5.mp4"}
                 loop
@@ -122,7 +165,7 @@ const Features = () => {
                 autoPlay
                 className="size-full object-cover object-center"
               />
-            </div>
+            </BentoTilt>
           </div>
         </div>
       </div>
